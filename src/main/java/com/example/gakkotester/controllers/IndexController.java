@@ -22,8 +22,10 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model){
-        model.addAttribute("status", "statusik");
+        boolean isUp = statusService.isUp();
+        model.addAttribute("status", isUp?"Gakko działa!":"Gakko nie działa");
         model.addAttribute("uptime", statusService.getUptime());
+        model.addAttribute("isUp", isUp);
         return "index";
     }
 }

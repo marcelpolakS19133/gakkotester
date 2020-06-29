@@ -5,15 +5,31 @@
     <title>Czy gakko działa?</title>
 </head>
 <body>
-    <div style="text-align: center;">
-        <p th:text="${status}"></p>
-        <br>
-        <p th:text="'Uptime: '+${uptime}"></p>
+<div style="text-align: center; position: fixed; width: 100%; top: 0;">
+    <p th:text="'🦀🦀🦀'+${status}+'🦀🦀🦀'"></p>
+    <br>
+    <p th:text="'Uptime: '+${uptime}"></p>
+    </div>
+    <div style="align-items: center; text-align: center; position: fixed; width: 100%; bottom: 0;">
+        <!--suppress RequiredAttributes -->
+        <img style="transform:translateX(-50%); vertical-align:center; width:auto; height:auto; max-width: 300vw; max-height: 80vh;
+                    position: relative; left:50%" th:src="${(isUp?'working.png':'notworking.png')}" alt="">
     </div>
 </body>
 <style>
     body{
-        background-color:#009ee5
+        background-color:#009ee5;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    @font-face{
+        font-family: Prompt;
+        src: url(Prompt-SemiBold.ttf)
+    }
+    div{
+        font-family: Prompt,serif;
+        color: white;
+        font-size: 32px;
     }
 </style>
 </html>

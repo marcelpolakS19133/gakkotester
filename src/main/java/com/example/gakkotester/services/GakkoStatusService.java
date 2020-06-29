@@ -3,20 +3,15 @@ package com.example.gakkotester.services;
 import com.example.gakkotester.dao.StatusRepository;
 import com.example.gakkotester.models.Status;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,12 +42,21 @@ public class GakkoStatusService {
 
         return df.format(((up+down)==0)?100:100.0*up/(up+down))+"%";
     }
-    @Scheduled(fixedRate=5000)
-    public void refreshStatus() throws URISyntaxException, IOException {
+    @Scheduled(fixedRate=30000)
+    public void refreshStatus() {
 
+        try{
+            rt.getForEntity("https://gakko.pjwstk.edu.pl/", String.class);
+            this.status.set(true);
+        }catch(ResourceAccessException |HttpStatusCodeException e){
+            this.status.set(false);
+        }
 
-        this.status.set(rt.getForEntity("https://facebook.com", String.class).getStatusCode().is2xxSuccessful());
         System.out.println(status);
         statusRepository.save(new Status(new Date(System.currentTimeMillis()), this.status.get()));
+    }
+
+    public boolean isUp(){
+        return this.status.get();
     }
 }
