@@ -52,7 +52,6 @@ public class GakkoStatusService {
             this.status.set(false);
         }
 
-        System.out.println(status);
         statusRepository.save(new Status(new Date(System.currentTimeMillis()), this.status.get()));
     }
 
